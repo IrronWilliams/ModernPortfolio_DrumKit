@@ -1,0 +1,66 @@
+Creating a JavaScript based drum-kit where user hits a corresponding key (A,S,D,F,G,H,J,K,L) the following will occur:
+    1. Will play the sound associated with the key. 
+    2. Do a short animation where the button/key is slightly raised and will also apply a yellow border around the key. 
+    
+When the key is pressed, a class of 'playing' will be added to the element. Consequently, this kicks in the CSS .playing class.  
+The playing class scales up the key by 1.1, changes both the border color and box shadow. With the regular .key class has a transition
+of 0.07 seconds long. 
+
+To begin, start an html file that contains a div with a class of 'keys'. Within the keys div, create other divs with a class of 
+'key' and 'data-key'. Each key on the keyboard has an associated keycode. Website https://keycode.info/ provides the respective keycode 
+for most of the standard keys. The letter A has a keycode of 65. So the data-key class will equal 65. data-key is a self-made attribute. 
+(src and class are standard attributes). To create a custom attribute, need to use format of 'data-' followed by name of attribute. So 
+in this example the custom attribute is data-key. Within the key div create a span that includes the sound the key will make.  
+Also create a kbd that reflects the letter the user will hit on keyboard.  Create another div for audio with a data-key attribute. 
+Code should look as follows:
+
+<div class='keys'>
+        <div data-key='65' class='key'>
+            <kbd>A</kbd>
+            <span class='sound'>clap</span>       
+        </div>
+
+</div>
+<audio data-key="65">
+
+Using data-key=65 in the key div to hookup the data-key=65 in the audio element. 
+The idea is such that when user hits the letter A, program will find the audio element associated with the letter A 
+and play the audio. As well as find the class=key in the div and add a class of playing so that it will animate itself.
+
+Create a script tag to listen for a key-up event. This can be done by getting the element that I am listening for. It is window in this
+case and chain on an event listener. The event I am listening for is called keyDown. Can use a function to access the event that. When 
+the keyDown event occurs, it returns a KeyBoard event which is an object full of data describing what happened when keyboard pressed. The
+info that I want from the object is the value from keyCode. 
+
+Next I need to determine if there is an audio element on the page that has a data-key=65. Can use document.querySelector('audio'). I want
+to select an audio element but want to select it where it has a data-key. Can use an attribute selector (the []) to specify data-key=65. 
+Would normally say document.querySelector('audio[data-key=65]'). The 65 will be a variable that lives inside the keydown event from the 
+function. Can use temperate literals (`` backtick) and template strings (${}). When console logging audio, I get the corresponding audio 
+element for the specific key. If i hit a key that does not have a corresponding audio element, will return a null. function will stop 
+running. 
+
+    window.addEventListener('keydown', (e) => {
+        const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`)
+        if (!audio) return //if there is no audio then return nothing/stop running function 
+        console.log(audio)
+    })
+
+Create folder for music audio files and update audio element with scr file. Should now hear the sound for the A key. 
+     <audio data-key="65" src="sounds/clap.wav"></audio>
+Find the data keys for the remaining letter and the respective divs and audio files. The program works as expected should play sounds 
+for each letter. The open-hat sound for F takes a couple seconds to finish. Calling .play() on an audio element that is currently playing
+will not play again until finished. So hitting F 3 times in 3 seconds, will only play 1x because it takes about 3 seconds for the sound
+to complete. To address this issue, I want to rewind it to the start of the element so that if I hit the F key in succession, it will just
+rewind to the start. Can use audio.currentTime = 0. 
+
+Next step is to select the corresponding key because I want to add the animation to the key. Do another querySelector and select the .key
+class with the respective keycode. This returns a div with the data-key associated with the letter that was keyed. 
+    const key = document.querySelector(`.key[data-key="${e.keyCode}"]`)
+To get the keys to do cool animation, notice the .key class in the css file. What's important for the animation is 'transition: all 0.07s'
+Also on the css file, there is a class for playing. When you add the class of .playing to the .key class, results will scale up the letter,
+change the border color and the box shadow color. To accomplish this, add key.classList.add('playing') to the keydown listener. For future
+projects, also have add('remove) and add('toggle'). The change happens quickly. To slow down the transitional changes, go to css file and
+change the transform scale to 2 (.playing) and the transition 1.07s. In order for the transitional changes to go away, need to remove  
+
+
+
