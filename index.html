@@ -58,22 +58,31 @@
 
 <script>
     //window.addEventListener('keydown', (e)=>{console.log(e, e.keyCode)})  
-    window.addEventListener('keydown', (e) => {
+    
+    function playSound(e) { //takes in event
         const audio = document.querySelector(`audio[data-key="${e.keyCode}"]`)
         const key = document.querySelector(`.key[data-key="${e.keyCode}"]`)
         if (!audio) return //if there is no audio then return nothing/stop running function 
         audio.currentTime = 0; //rewinds audio to the start. w/o this audio will run in its entirety. hitting keys in succession won't work
         audio.play()
-        key.classList.add('playing') //adds the playing class which changes border color and box shadow. 
-        
-        console.log(key)
-        
-        
-        console.log(audio)
-    })
-        
-        
+        key.classList.add('playing') //adds the playing class which transitions from scale 1 border black to scale 1.1 border yellow. 
+        key.classList.add('remove')
+        //console.log(key)
+        //console.log(audio)
+    }
+    
+    function removeTransistion(e) { 
+        //console.log(e)
+        if(e.propertyName !== 'transform') return //skips if event is not transform. identifying the transorm event when button is clicked
+        console.log(e.propertyName)  //console log 'transform' because this is the property that is being ended. 
+        console.log(this) //this is equal to the key. this always equal to what got called against it. addEventListener got called and the key got called against it. 
+        this.classList.remove('playing') //removes the class called playing (from css)
+    }
 
+    const keys = document.querySelectorAll('.key') //returns a nodeList with all of the divs that have a class=key
+    keys.forEach(key => key.addEventListener('transitionend', removeTransistion)) //after transition completes, calls removeTransistion function
+    window.addEventListener('keydown', playSound) //when someone keysdown, call the playSound function
+        
 </script>
 
  

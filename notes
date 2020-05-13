@@ -47,7 +47,7 @@ running.
 
 Create folder for music audio files and update audio element with scr file. Should now hear the sound for the A key. 
      <audio data-key="65" src="sounds/clap.wav"></audio>
-Find the data keys for the remaining letter and the respective divs and audio files. The program works as expected should play sounds 
+Find the data keys for the remaining letter and the respective divs and audio files. The program works as expected and should play sounds 
 for each letter. The open-hat sound for F takes a couple seconds to finish. Calling .play() on an audio element that is currently playing
 will not play again until finished. So hitting F 3 times in 3 seconds, will only play 1x because it takes about 3 seconds for the sound
 to complete. To address this issue, I want to rewind it to the start of the element so that if I hit the F key in succession, it will just
@@ -60,7 +60,31 @@ To get the keys to do cool animation, notice the .key class in the css file. Wha
 Also on the css file, there is a class for playing. When you add the class of .playing to the .key class, results will scale up the letter,
 change the border color and the box shadow color. To accomplish this, add key.classList.add('playing') to the keydown listener. For future
 projects, also have add('remove) and add('toggle'). The change happens quickly. To slow down the transitional changes, go to css file and
-change the transform scale to 2 (.playing) and the transition 1.07s. In order for the transitional changes to go away, need to remove  
+change the transform scale to 2 (.playing) and the transition 1.07s. In order for the transitional changes to go away, can use a 
+transitioned end event that will fire when the transition has stopped. A transitioned end event is similar to a click event. A click event 
+occurs when something is clicked, fires off an event that says 'hey, I've been clicked'. There are also events that will say 'I didn't get
+clicked but I was transitioned' In this example, button was transitioned from scale 1 border black to scale 1.1 border yellow. Can listen
+on each key for when the transitioned event happens. I want to select every key on the page so use 
+    const keys = document.querySelectorAll(.key)". 
+This returns a nodesList of every single element that was matched. Now want to listen for an event called transitioned on each key. Cannot 
+add the event listener to keys like keys.addEventListener('transitioned'). I have to loop over every single element then attach an event
+listener. Use forEach() method to loop over every element and listen for transitioned
+    keys.forEach(key=>key.addEventListener('transitioned')
+When that ends, run a function called removeTransition. What this says is that each key gets an evenListener added to it which is 
+transitioned and when a transition has ended, it will be removed. 
+    keys.forEach(key=>key.addEventListener('transitioned'),removeTransition)
+
+Now need to create the function removeTransition -> function removeTransition(e){console.log(e)}. 
+Pressing A and logging the result returns 6 transition end events. This is because of all of the different border transitions and single
+box shadow transition. From this list of transformations, select the one that takes the longest time or last to transition, which will be
+'transform'. Transform is the value for the PropertyName property. 
+
+When transition it complete, want to reverse/remove the class managing the transition. 
+
+Project focused on key-events, playing audio, listening for the transitionend event
+
+
+
 
 
 
